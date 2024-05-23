@@ -48,5 +48,23 @@
             "mode": "Online",
             "type":"training"
         }
+    ],
+    "students":[
+        {
+            "id":1,
+            "name": "Anamika joshi"
+        },
+        {
+            "id":2,
+            "name": "Ashwani Raj"
+        },
+        {
+            "id":3,
+            "name": "Ishan Yadav"
+        },
+        {
+            "id":4,
+            "name": "Praful Yadav"
+        }
     ]
 }
