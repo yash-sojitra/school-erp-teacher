@@ -1,0 +1,52 @@
+{
+    "schedule":[
+        {
+            "id":1,
+            "subject":"Activity",
+            "class":5,
+            "time": "08:00",
+            "mode": "Online",
+            "type":"meeting"
+        },
+        {
+            "id":2,
+            "subject":"Science",
+            "class":5,
+            "time": "08:30",
+            "mode": "Offline",
+            "type":"class lecture"
+        },
+        {
+            "id":3,
+            "subject":"Biology",
+            "class":5,
+            "time": "09:00",
+            "mode": "Online",
+            "type":"training"
+        },
+        {
+            "id":4,
+            "subject":"Activity",
+            "class":5,
+            "time": "08:00",
+            "mode": "Online",
+            "type":"meeting"
+        },
+        {
+            "id":5,
+            "subject":"Science",
+            "class":5,
+            "time": "08:30",
+            "mode": "Offline",
+            "type":"class lecture"
+        },
+        {
+            "id":6,
+            "subject":"Biology",
+            "class":5,
+            "time": "09:00",
+            "mode": "Online",
+            "type":"training"
+        }
+    ]
+}
