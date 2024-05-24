@@ -10,18 +10,16 @@ const Attendance = () => {
 
   const handleCheckboxChange = (event) => {
     const { id, checked } = event.target;
-    if(checked){
-      checkedItems.push(id);
-    }
-    else{
-      checkedItems.pop(id);
-    }
-    setCheckedItems(checkedItems);
+    setCheckedItems((prevCheckedItems)=>{
+      checked
+      ? [...prevCheckedItems, parseInt(id)]
+      : prevCheckedItems.filter((itemId) => itemId !== parseInt(id))
+    })
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Checked items:", checkedItems);
+    console.log("Checked item IDs:", checkedItems);
     // Process the checkedItems as needed
   };
 
@@ -44,7 +42,6 @@ const Attendance = () => {
               type="checkbox"
               name={student.name}
               id={student.id}
-              checked={!!checkedItems[student.name]}
               onChange={handleCheckboxChange}
             />
             <Avatar className="size-12">

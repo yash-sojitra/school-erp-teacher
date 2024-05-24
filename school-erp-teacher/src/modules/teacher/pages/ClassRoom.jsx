@@ -1,5 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Attendance from "../components/classroom/Attendance";
+import Students from "../components/classroom/Students";
 
 const ClassRoom = () => {
   return (
@@ -19,7 +20,9 @@ const ClassRoom = () => {
         <TabsContent value="attendance">
           <Attendance />
         </TabsContent>
-        <TabsContent value="profile">Change your password here.</TabsContent>
+        <TabsContent value="profile">
+          <Students/>
+        </TabsContent>
       </Tabs>
   );
 };
