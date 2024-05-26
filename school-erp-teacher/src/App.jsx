@@ -9,6 +9,7 @@ import ProtectedRoute from "./auth/ProtectedRoute/ProtectedRoute";
 import Dashboard from "./modules/teacher/Dashboard";
 import HomePage from "./modules/teacher/pages/HomePage";
 import ClassRoom from "./modules/teacher/pages/ClassRoom";
+import LeavePage from "./modules/teacher/pages/LeavePage";
 // import Sidebar from "./components/Sidebar";
 // import OutsideClick from "./hooks/outsideClick";
 
@@ -43,6 +44,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <ClassRoom />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/leave",
+        element: (
+          <ProtectedRoute>
+            <LeavePage />
           </ProtectedRoute>
         ),
       },

@@ -1,5 +1,5 @@
 import { AuthContext } from "@/auth/context/AuthContext";
-import { BadgeIndianRupee, CalendarClock, GraduationCap, Info, LayoutDashboard, LibraryBig, LogOut, MessageCircleMore, Settings } from "lucide-react";
+import { BadgeIndianRupee, CalendarClock, GraduationCap, Info, LayoutDashboard, LibraryBig, LogOut, MessageCircleMore, Settings, Stamp } from "lucide-react";
 import { useContext } from "react";
 // import OutsideClick from "../hooks/outsideClick";
 import { Outlet, Link } from "react-router-dom";
@@ -19,6 +19,7 @@ const Sidebar = ({sidebar, boxRef}) => {
             {/* <li className="flex gap-4 my-6 items-center"><LayoutDashboard/> Dashboard</li> */}
             <li><Link to='/' className="flex gap-4 my-6 items-center"><LayoutDashboard/> Dashboard</Link></li>
             <li><Link to='/class' className="flex gap-4 my-6 items-center"><GraduationCap />Class Room</Link></li>
+            <li><Link to='/leave' className="flex gap-4 my-6 items-center"><Stamp /> Leave</Link></li>
           </ul>
         </div>
         <div>

@@ -29,7 +29,7 @@ const Profile = () => {
         setError(1);
       }
     }
-    fetchData(6);
+    fetchData(5);
   }, []);
 
   return (

@@ -23,3 +23,39 @@ export function getTodaysDay() {
     // Return the day of the week as a string
     return days[dayOfWeek];
 }
+
+export function dateString(dateString){
+
+    let date = new Date(dateString);
+
+    // Get the year, month, and day from the Date object
+    let year = date.getFullYear();
+    let month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    let day = String(date.getDate()).padStart(2, '0');
+
+    // Construct the formatted date string in YYYY-MM-DD format
+    let formattedDate = `${year}-${month}-${day}`;
+
+    return formattedDate;
+}
+
+export function daysBetween(dateString1, dateString2) {
+    // Parse the input date strings into Date objects
+    let date1 = new Date(dateString1);
+    let date2 = new Date(dateString2);
+
+    // Calculate the difference in time (in milliseconds)
+    let timeDifference = Math.abs(date2 - date1);
+
+    // Convert time difference from milliseconds to days
+    let daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+    return daysDifference;
+}
+
+// Example usage
+let date1 = '2024-06-04';
+let date2 = '2024-06-10';
+let numberOfDays = daysBetween(date1, date2);
+
+console.log(numberOfDays); // Output: 6

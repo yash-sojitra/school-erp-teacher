@@ -155,5 +155,31 @@
         "name": "rahul Yadav8"
       }
     ]
-  }
+  },
+  "leaves":[
+    {
+      "id":1,
+      "title":"Rajastan Trip",
+      "from":"4th June, 2024",
+      "to": "8th June, 2024",
+      "days": "4",
+      "status":"pending"
+    },
+    {
+      "id":2,
+      "title":"Rajastan Trip",
+      "from":"4th June, 2024",
+      "to": "8th June, 2024",
+      "days": "4",
+      "status":"pending"
+    },
+    {
+      "id":3,
+      "title":"Rajastan Trip",
+      "from":"4th June, 2024",
+      "to": "8th June, 2024",
+      "days": "4",
+      "status":"pending"
+    }
+  ]
 }
