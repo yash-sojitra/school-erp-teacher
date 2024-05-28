@@ -21,10 +21,10 @@ const Schedule = () => {
     if (finalData.length == 0) {
       setFinalData(schedule);
     }
-    console.log(selected);
-    console.log(finalData);
+    // console.log(selected);
+    // console.log(finalData);
 
-    console.log(selected);
+    // console.log(selected);
 
   },[selected.length])
 

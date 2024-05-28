@@ -33,7 +33,11 @@ const LeaveTable = ({leaves}) => {
         <td>No of Days</td>
         <td>Status</td>
       </tr>
-      {leaves.map((leave) => (
+      { 
+
+      leaves?
+
+      leaves.map((leave) => (
         <tr
           key={leave.id}
           className="text-xl font-medium border-b-2 hover:bg-slate-100"
@@ -46,7 +50,9 @@ const LeaveTable = ({leaves}) => {
             <Badge>{leave.status}</Badge>
           </td>
         </tr>
-      ))}
+      ))
+      :<div className="text-center py-4 text-xl font-medium" >No leaves</div>
+      }
     </table>
   );
 };

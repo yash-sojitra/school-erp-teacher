@@ -10,6 +10,7 @@ import Dashboard from "./modules/teacher/Dashboard";
 import HomePage from "./modules/teacher/pages/HomePage";
 import ClassRoom from "./modules/teacher/pages/ClassRoom";
 import LeavePage from "./modules/teacher/pages/LeavePage";
+import Library from "./modules/teacher/pages/Library";
 // import Sidebar from "./components/Sidebar";
 // import OutsideClick from "./hooks/outsideClick";
 
@@ -52,6 +53,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <LeavePage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/library",
+        element: (
+          <ProtectedRoute>
+            <Library />
           </ProtectedRoute>
         ),
       },

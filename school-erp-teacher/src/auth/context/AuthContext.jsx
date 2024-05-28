@@ -36,20 +36,20 @@ const AuthProvider = ({ children }) => {
     const token = localStorage.getItem("token");
 
     async function fetchData(id) {
-      const response = await axios.get(`https://erp-system-backend.onrender.com/api/v1/teacher/1/fetch/${id}`)
+      const response = await axios.get(`https://erp-system-backend.onrender.com/api/v1/teacher/6/fetch/${id}`)
       return response.data.data;
     }
 
     if (token) {
       try {
         const data = jwtDecode(token);
-        console.log("Decoded token data:", data);
+        // console.log("Decoded token data:", data);
         if (data.id) {
           fetchData(data.id).then((studentData) => {
-            console.log(studentData);
+            // console.log(studentData);
             dispatch({ type: "login", payload: { id: data.id, data: studentData } });
-            console.log("final state is", state);
-            console.log("Dispatched LOGIN action with payload:", data.id, studentData);
+            // console.log("final state is", state);
+            // console.log("Dispatched LOGIN action with payload:", data.id, studentData);
           });
         }
       }
@@ -64,24 +64,24 @@ const AuthProvider = ({ children }) => {
 
     //axios implementation
     const response = await axios.post(
-      `https://erp-system-backend.onrender.com/api/v1/teacher/1/login`,
+      `https://erp-system-backend.onrender.com/api/v1/teacher/login`,
       credentials
     );
-    const data = response.data;
-    console.log(data);
+    const responseData = response.data;
+    console.log(responseData);
 
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      const { id } = jwtDecode(data.token);
+    if (responseData.token) {
+      localStorage.setItem("token", responseData.token);
+      const { id } = jwtDecode(responseData.token);
 
-      const response = await axios.get(`https://erp-system-backend.onrender.com/api/v1/teacher/1/fetch/${id}`)
+      const response = await axios.get(`https://erp-system-backend.onrender.com/api/v1/teacher/${responseData.teacherData.campusId}/fetch/${responseData.teacherData.id}`)
       console.log(response.data.data);
       const studentData = response.data.data;
 
       dispatch({ type: "login", payload: { id: id, data: studentData } });
     }
 
-    return { message: data.message, success: data.success };
+    return { message: responseData.message, success: responseData.success };
   };
 
   const logout = () => {

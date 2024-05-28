@@ -58,4 +58,4 @@ let date1 = '2024-06-04';
 let date2 = '2024-06-10';
 let numberOfDays = daysBetween(date1, date2);
 
-console.log(numberOfDays); // Output: 6
+// console.log(numberOfDays); // Output: 6
