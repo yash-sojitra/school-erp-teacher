@@ -11,6 +11,7 @@ import HomePage from "./modules/teacher/pages/HomePage";
 import ClassRoom from "./modules/teacher/pages/ClassRoom";
 import LeavePage from "./modules/teacher/pages/LeavePage";
 import Library from "./modules/teacher/pages/Library";
+import TimeTable from "./modules/teacher/pages/TimeTable";
 // import Sidebar from "./components/Sidebar";
 // import OutsideClick from "./hooks/outsideClick";
 
@@ -61,6 +62,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Library />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/timeTable",
+        element: (
+          <ProtectedRoute>
+            <TimeTable />
           </ProtectedRoute>
         ),
       },

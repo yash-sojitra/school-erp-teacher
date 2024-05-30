@@ -4,7 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
 
-  const { isAuthenticated } = useContext(AuthContext);
+  const { data , isAuthenticated } = useContext(AuthContext);
   // const { isAuthenticated } = true;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -15,7 +15,12 @@ const ProtectedRoute = ({ children }) => {
       navigate("/login", { replace: true });
     }
     else {
-      setLoading(false);
+      if(children.type.name == "TimeTable" && data.AdditionalRole != "class teacher"){
+        navigate("/")
+      }
+      else {
+        setLoading(false);
+      }
     }
   }, [isAuthenticated, navigate]);
 

@@ -6,9 +6,7 @@ import { Outlet, Link } from "react-router-dom";
 
 const Sidebar = ({sidebar, boxRef}) => {
 
-  // const sidebara = OutsideClick();
-
-  const {logout} = useContext(AuthContext);
+  const {data, logout} = useContext(AuthContext);
 
   return (
     <div ref={boxRef} className={` sidebar z-[1] h-screen w-60 py-6 px-8 flex-col justify-between rounded-r-2xl shadow-xl bg-white ${sidebar? 'flex absolute z-[1]' : 'hidden'} flex absolute z-[1]  lg:flex lg:sticky lg:top-0 `}>
@@ -21,6 +19,9 @@ const Sidebar = ({sidebar, boxRef}) => {
             <li><Link to='/class' className="flex gap-4 my-6 items-center"><GraduationCap />Class Room</Link></li>
             <li><Link to='/leave' className="flex gap-4 my-6 items-center"><Stamp /> Leave</Link></li>
             <li><Link to='/library' className="flex gap-4 my-6 items-center"><Library /> Library</Link></li>
+            {data.AdditionalRole === "class teacher" && 
+            <li><Link to='/timeTable' className="flex gap-4 my-6 items-center"><Library /> Time Table</Link></li>
+            }
           </ul>
         </div>
         <div>
