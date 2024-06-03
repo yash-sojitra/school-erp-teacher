@@ -21,7 +21,8 @@ const Sidebar = ({sidebar, boxRef}) => {
             <li><Link to='/library' className="flex gap-4 my-6 items-center"><Library /> Library</Link></li>
             {data.AdditionalRole === "class teacher" && 
             <li><Link to='/timeTable' className="flex gap-4 my-6 items-center"><Library /> Time Table</Link></li>
-            }
+          }
+          <li><Link to='/support' className="flex gap-4 my-6 items-center"><Info /> Support</Link></li>
           </ul>
         </div>
         <div>
