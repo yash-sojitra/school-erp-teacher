@@ -44,13 +44,13 @@ const AuthProvider = ({ children }) => {
     if (token) {
       try {
         const data = jwtDecode(token);
-        // console.log("Decoded token data:", data);
+        console.log("Decoded token data:", data);
         if (data.id) {
           fetchData(data.id).then((studentData) => {
-            // console.log(studentData);
+            console.log(studentData);
             dispatch({ type: "login", payload: { id: data.id, data: studentData } });
-            // console.log("final state is", state);
-            // console.log("Dispatched LOGIN action with payload:", data.id, studentData);
+            console.log("final state is", state);
+            console.log("Dispatched LOGIN action with payload:", data.id, studentData);
           });
         }
       }
@@ -87,7 +87,9 @@ const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem("token");
+    console.log("dispatched logout");
     dispatch({ type: "LOGOUT" });
+    console.log(state);
   };
 
   return (

@@ -19,6 +19,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Calendar as ShadCalendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
+import "../../../../node_modules/react-big-calendar/lib/sass/styles.scss";
+import { dateTimeFormatter } from "../utils/dateFormatter";
+
+const localizer = momentLocalizer(moment);
 
 const daysofWeek = [
   "monday",
@@ -47,6 +63,8 @@ const TimeTable = () => {
   const [activeDay, setActiveDay] = useState(daysofWeek[0]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [dayTable, setDayTable] = useState([]);
+  const [date, setDate] = useState(new Date());
 
   async function fetchTimeTable() {
     try {
@@ -312,34 +330,53 @@ const TimeTable = () => {
           </div>
         </>
       ) : (
-        <div className="flex justify-between w-full mt-6">
-          {Object.keys(timeTable).map((key) => {
-            return (
-              <div key={key} className="w-full">
-                <h1 className="p-4 bg-white mb-3 text-center text-xl font-medium">
-                  {key}
-                </h1>
-                {timeTable[key] &&
-                  timeTable[key].map((subject) => {
-                    return (
-                      <Card key={key}>
-                        <CardHeader>
-                          <CardTitle>{subject.subjectName}</CardTitle>
-                          <CardDescription>
-                            {subject.teacherName}
-                          </CardDescription>
-                        </CardHeader>
-                        <CardContent className="flex gap-2 items-center text-lg">
-                          <Clock10 className="size-6" /> {subject.timeFrom} -{" "}
-                          {subject.timeTo}
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-              </div>
-            );
-          })}
-        </div>
+
+
+        <div className="w-full mt-6">
+      {!error ? (
+        <>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-[280px] justify-start text-left font-normal mb-6",
+                  !date && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {date ? format(date, "PPP") : <span>Pick a date</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0">
+              <ShadCalendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+          <div className="w-full">
+            <Calendar
+              localizer={localizer}
+              events={dayTable}
+              date={date}
+              defaultView="day"
+              startAccessor="start"
+              endAccessor="end"
+              toolbar={false}
+              min={dateTimeFormatter(date,'6:00')}
+              max={dateTimeFormatter(date,"19:00")}
+              />
+          </div>
+        </>
+      ) : (
+        <div className="text-xl font-bold text-red-600">{error}</div>
+      )}
+    </div>
+
+
       )}
     </div>
   );

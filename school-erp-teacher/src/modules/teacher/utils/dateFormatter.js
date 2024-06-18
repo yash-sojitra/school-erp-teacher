@@ -53,9 +53,16 @@ export function daysBetween(dateString1, dateString2) {
     return daysDifference;
 }
 
-// Example usage
-let date1 = '2024-06-04';
-let date2 = '2024-06-10';
-let numberOfDays = daysBetween(date1, date2);
+export function dateTimeFormatter(date, timeString) {
+    let [hours, minutes] = timeString.split(':').map(Number);
+    let newDate = new Date(date.setHours(hours, minutes));
+    console.log(newDate);
+    return newDate
+}
 
-// console.log(numberOfDays); // Output: 6
+// Example usage
+// let date1 = '2024-06-04';
+// let date2 = '2024-06-10';
+// let numberOfDays = daysBetween(date1, date2);
+
+// // console.log(numberOfDays); // Output: 6

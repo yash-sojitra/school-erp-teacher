@@ -52,7 +52,7 @@ const Login = () => {
     <div className="flex w-full h-full items-center">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>Student Login</CardTitle>
+          <CardTitle>Teacher Login</CardTitle>
         </CardHeader>
         <form onSubmit={handleSubmit} >
           <CardContent>

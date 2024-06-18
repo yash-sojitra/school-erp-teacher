@@ -32,7 +32,7 @@ import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/auth/context/AuthContext";
 import axios from "axios";
 import { dateString, daysBetween } from "../../utils/dateFormatter";
@@ -48,7 +48,9 @@ const formSchema = z.object({
 });
 
 const LeaveForm = ({leaves, setLeaves}) => {
+
   const { data } = useContext(AuthContext);
+  const [open, setOpen] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -75,6 +77,8 @@ const LeaveForm = ({leaves, setLeaves}) => {
         body
       );
       console.log(response.data.success);
+      setOpen(false)
+      setLeaves(()=>[...leaves, body])
     } catch (err) {
       console.log(err);
     }
@@ -83,7 +87,7 @@ const LeaveForm = ({leaves, setLeaves}) => {
   
   return (
     <div>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <Button>New Application</Button>
         </DialogTrigger>

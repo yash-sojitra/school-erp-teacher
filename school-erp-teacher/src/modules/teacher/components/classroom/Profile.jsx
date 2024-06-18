@@ -16,7 +16,7 @@ const Profile = ({student, departmentId}) => {
     <div>
       <Dialog>
         <DialogTrigger>
-          <Button variant="outline" className="w-full hover:bg-primary">View Profile</Button>
+          <Button variant="outline" className="w-full m-0 hover:bg-primary">View Profile</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>

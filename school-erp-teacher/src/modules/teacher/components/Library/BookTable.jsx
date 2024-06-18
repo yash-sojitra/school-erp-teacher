@@ -33,11 +33,13 @@ const BookTable = () => {
 
     try {
       const response = await axios.delete(`https://erp-system-backend.onrender.com/api/v1/library/delete-book/${data.id}/6`)
-    } catch (error) {
-      
-    }
 
+      console.log(response.data);
+
+    } catch (error) {
+      console.log(error);
   }
+}
 
   return (
     <>

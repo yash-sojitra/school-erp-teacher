@@ -23,7 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import axios from "axios";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/auth/context/AuthContext";
 // import { useContext } from "react";
 // import { AuthContext } from "@/auth/context/AuthContext";
@@ -48,6 +48,8 @@ const formSchema = z.object({
 const BookForm = () => {
 
   const {data} = useContext(AuthContext);
+
+  const [open, setOpen] = useState(false);
 
   const subjects = data.subject;
 
@@ -84,6 +86,7 @@ const BookForm = () => {
         subject:formData.subject
       })     
       console.log(response.data);
+      setOpen(false)
     } catch (error) {
       console.error(error);
     }
@@ -91,7 +94,7 @@ const BookForm = () => {
 
   return (
     <div>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <Button>Add Book</Button>
         </DialogTrigger>

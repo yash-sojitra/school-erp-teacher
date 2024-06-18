@@ -4,10 +4,13 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/auth/context/AuthContext";
 import axios from "axios";
 
-const LeavePage = () => {
+import { Input } from "@/components/ui/input";
 
+const LeavePage = () => {
   const { data } = useContext(AuthContext);
   const [leaves, setLeaves] = useState([]);
+  const [search, setSearch] = useState("");
+  const [searchData, setSearchData] = useState([]);
 
   useEffect(() => {
     async function fetchLeaves(id) {
@@ -16,6 +19,7 @@ const LeavePage = () => {
           `https://erp-system-backend.onrender.com/api/v1/leave/fetch-leaves/${id}`
         );
         setLeaves(response.data.data);
+        setSearchData(response.data.data);
       } catch (err) {
         console.log(err);
       }
@@ -23,13 +27,29 @@ const LeavePage = () => {
     fetchLeaves(data.id);
   }, []);
 
+  function handleSearch(e) {
+    setSearch(e.target.value);
+  }
+
+  useEffect(() => {
+    setSearchData(() =>
+      leaves.filter((leave) => leave.reason.includes(search))
+    );
+  }, [search]);
+
   return (
     <div className="w-full mx-6 md:mr-0">
       <div className="w-full flex justify-between align-bottom my-4">
-      <h1 className="text-3xl font-bold">Leave Application</h1>
+        <h1 className="text-3xl font-bold">Leave Application</h1>
         <LeaveForm leaves={leaves} setLeaves={setLeaves} />
       </div>
-      <LeaveTable leaves={leaves} />
+      <Input
+        className="w-72 bg-
+      white mb-6"
+        placeholder="Search"
+        onChange={handleSearch}
+      />
+      <LeaveTable leaves={searchData} />
     </div>
   );
 };

@@ -47,7 +47,7 @@ const LeaveTable = ({leaves}) => {
           <td>{dateString(leave.dateTo)}</td>
           <td>{leave.noOfDays}</td>
           <td>
-            <Badge>{leave.status}</Badge>
+            <Badge>{leave.status || "pending" }</Badge>
           </td>
         </tr>
       ))

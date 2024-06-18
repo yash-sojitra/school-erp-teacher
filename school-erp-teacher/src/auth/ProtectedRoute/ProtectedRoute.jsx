@@ -11,7 +11,9 @@ const ProtectedRoute = ({ children }) => {
 
 
   useEffect(() => {
-    if (isAuthenticated === false) {
+    console.log("Data changed");
+    console.log(data);
+    if (data === null) {
       navigate("/login", { replace: true });
     }
     else {
@@ -22,7 +24,7 @@ const ProtectedRoute = ({ children }) => {
         setLoading(false);
       }
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, data]);
 
   if (loading) {
     return <div>Loading...</div>;
