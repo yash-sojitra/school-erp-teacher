@@ -1,11 +1,14 @@
 import { AuthContext } from "@/auth/context/AuthContext";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 
-const BookTable = () => {
+const BookTable = ({refresh, setRefresh}) => {
   const [books, setBooks] = useState([]);
   const { data } = useContext(AuthContext);
+  const [search, setSearch] = useState('');
+  const [searchData, setSearchData] = useState([])
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -17,13 +20,19 @@ const BookTable = () => {
         );
 
         setBooks(respose.data.data);
+        setSearchData(respose.data.data);
       } catch (error) {
         setError(true);
         console.error(error);
       }
     }
     fetchBooks();
-  }, []);
+    setRefresh(false)
+  }, [refresh]);
+
+  useEffect(()=>{
+    setSearchData(()=>books.filter((book)=>book.name.includes(search) || book.subject.includes(search)))
+  },[search])
 
   async function handleDelete(e){
 
@@ -43,6 +52,7 @@ const BookTable = () => {
 
   return (
     <>
+      <Input className="mb-4 bg-white w-72" placeholder="search" onChange={(e)=>setSearch(e.target.value)}/>
       <table className="w-full text-left bg-white rounded-xl shadow-lg">
         <tr className="text-lg font-medium text-gray-500 border-b-2">
           <td className="py-4 pl-6">Name</td>
@@ -50,7 +60,7 @@ const BookTable = () => {
           <td>Action</td>
         </tr>
         {books ? (
-          books.map((book) => (
+          searchData.map((book) => (
             <tr
               key={book.name}
               className="text-xl font-medium border-b-2 hover:bg-slate-100"

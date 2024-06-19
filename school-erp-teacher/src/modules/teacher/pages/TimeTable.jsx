@@ -91,8 +91,8 @@ const TimeTable = () => {
       const response = await axios.get(
         `https://erp-system-backend.onrender.com/api/v1/department/fetch/${data.departmentId}`
       );
-      // console.log(response.data.data.subjects);
-      setSubjects(response.data.data.subjects);
+      console.log(response);
+      setSubjects(response.data.subject);
     } catch (e) {
       setError("couldn't fetch time department data");
       console.log(e);

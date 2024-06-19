@@ -10,7 +10,7 @@ const ProfileInfo = () => {
     <>
       <div className="profile flex gap-4 lg:gap-6 justify-center items-center m-8">
         <Avatar className="size-24 lg:size-28">
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src={data.photo} />
           <AvatarFallback>S</AvatarFallback>
         </Avatar>
         <div className="info">
