@@ -5,11 +5,12 @@ import {
   Clock10,
   MoveLeft,
   PenSquareIcon,
+  SquarePen,
   Plus,
   Save,
   Trash2,
 } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback, useMemo } from "react";
 
 import {
   Card,
@@ -65,6 +66,14 @@ const TimeTable = () => {
   const [error, setError] = useState(false);
   const [dayTable, setDayTable] = useState([]);
   const [date, setDate] = useState(new Date());
+  const [holidays, setHolidays] = useState({});
+	const [showAddHolidayForm, setShowAddHolidayForm] = useState(false);
+	const [newHoliday, setNewHoliday] = useState({ date: "", reason: "" });
+	const [editingHoliday, setEditingHoliday] = useState(null);
+	const [editHolidayData, setEditHolidayData] = useState({
+		date: "",
+		reason: "",
+	});
 
   async function fetchTimeTable() {
     try {
@@ -112,6 +121,111 @@ const TimeTable = () => {
       console.log(e);
     }
   }
+  const fetchHolidays = useCallback(async () => {
+		try {
+			const response = await axios.get(
+				`https://erp-system-backend.onrender.com/api/v1/holiday/fetch`
+			);
+			setHolidays(response.data);
+		} catch (e) {
+			console.error(e);
+			setError("Couldn't fetch holidays");
+		}
+	}, []);
+
+	const formatDate = (dateString) => {
+		if (!dateString) return "Invalid Date";
+		const options = { day: "2-digit", month: "2-digit", year: "numeric" };
+		return new Date(dateString).toLocaleDateString("en-GB", options);
+	};
+
+	const addHoliday = async () => {
+		try {
+			const response = await axios.post(
+				`https://erp-system-backend.onrender.com/api/v1/holiday/create/${data.id}`,
+				newHoliday
+			);
+			const addedHoliday = response.data.holiday;
+			const monthName = new Date(addedHoliday.date).toLocaleString("default", {
+				month: "long",
+			});
+
+			addedHoliday.date = formatDate(addedHoliday.date);
+
+			setHolidays((prevHolidays) => ({
+				...prevHolidays,
+				[monthName]: [...(prevHolidays[monthName] || []), addedHoliday],
+			}));
+			setShowAddHolidayForm(false);
+			setNewHoliday({ date: "", reason: "" });
+		} catch (e) {
+			console.error(e);
+			setError("Couldn't add holiday");
+		}
+	};
+
+	const updateHoliday = async () => {
+		if (!editingHoliday) {
+			setError("No holiday selected for editing");
+			return;
+		}
+		try {
+			const response = await axios.put(
+				`https://erp-system-backend.onrender.com/api/v1/holiday/update/${data.id}/${editingHoliday}`,
+				editHolidayData,
+				{ headers: { Authorization: `Bearer ${data.token}` } }
+			);
+			const updatedHoliday = response.data.holiday;
+			updatedHoliday.date = formatDate(updatedHoliday.date);
+
+			setHolidays((prevHolidays) => {
+				const updatedHolidays = { ...prevHolidays };
+				for (const month in updatedHolidays) {
+					updatedHolidays[month] = updatedHolidays[month].map((holiday) =>
+						holiday.id === editingHoliday ? updatedHoliday : holiday
+					);
+				}
+				return updatedHolidays;
+			});
+			setEditingHoliday(null);
+			setEditHolidayData({ date: "", reason: "" });
+		} catch (e) {
+			console.error(e);
+			if (e.response && e.response.status === 404) {
+				setError("Holiday not found");
+			} else {
+				setError("Couldn't update holiday");
+			}
+		}
+	};
+
+	const deleteHoliday = async (holidayId) => {
+		try {
+			await axios.delete(
+				`https://erp-system-backend.onrender.com/api/v1/holiday/delete/${data.id}/${holidayId}`,
+				{ headers: { Authorization: `Bearer ${data.token}` } }
+			);
+			setHolidays((prevHolidays) => {
+				const updatedHolidays = { ...prevHolidays };
+				for (const month in updatedHolidays) {
+					updatedHolidays[month] = updatedHolidays[month].filter(
+						(holiday) => holiday.id !== holidayId
+					);
+					if (updatedHolidays[month].length === 0) {
+						delete updatedHolidays[month];
+					}
+				}
+				return updatedHolidays;
+			});
+		} catch (e) {
+			console.error(e);
+			if (e.response && e.response.data && !e.response.data.success) {
+				setError(e.response.data.message);
+			} else {
+				setError("Couldn't delete holiday");
+			}
+		}
+	};
 
   function addPeriod() {
     const newPeriod = {
@@ -155,7 +269,57 @@ const TimeTable = () => {
     fetchTimeTable();
     fetchDept();
     fetchAllTeachers();
-  }, []);
+    fetchHolidays();
+  }, [fetchHolidays]);
+  const holidaysList = useMemo(
+		() =>
+			Object.keys(holidays).map((month) => {
+				if (holidays[month].length === 0) return null;
+				return (
+					<div key={month} className="h-fit">
+						<h4 className="text-black mt-4 font-semibold text-2xl">{month}</h4>
+						<ul className="mt-2 border-[#FE7044] border rounded-lg h-fit">
+							{holidays[month].map((holiday) => (
+								<li key={holiday.id} className="">
+									<div className="block p-4 w-64">
+										<div className="mb-4">
+											<p className="mt-1 text-xs font-medium text-gray-800">
+												{holiday.date}
+											</p>
+											<strong className="font-medium text-base text-black">
+												{holiday.reason}
+											</strong>
+
+											<div className="flex gap-2 justify-end items-center mt-2 mb-4">
+												<button
+													className="p-2 rounded-full bg-[#6E62E5] hover:bg-white text-white hover:text-[#6E62E5]"
+													onClick={() => {
+														setEditingHoliday(holiday.id);
+														setEditHolidayData({
+															date: holiday.date,
+															reason: holiday.reason,
+														});
+													}}
+												>
+													<SquarePen className="size-4" />
+												</button>
+												<button
+													className="p-2 rounded-full bg-[#FE7044] hover:bg-white text-white hover:text-[#FE7044]"
+													onClick={() => deleteHoliday(holiday.id)}
+												>
+													<Trash2 className="size-4" />
+												</button>
+											</div>
+										</div>
+									</div>
+								</li>
+							))}
+						</ul>
+					</div>
+				);
+			}),
+		[holidays]
+	);
 
   return (
     <div className="p-6 w-full">
@@ -374,11 +538,82 @@ const TimeTable = () => {
       ) : (
         <div className="text-xl font-bold text-red-600">{error}</div>
       )}
-    </div>
-
-
+     </div>
+     
+      )}
+      <div className="rounded-xl border border-white bg-[#EFEEFC] p-4 w-full mt-6">
+      <h3 className="text-2xl font-bold text-black text-center">Holidays</h3>
+      {Object.keys(holidays).length === 0 ? (
+        <p className="text-gray-300">No holidays available</p>
+      ) : (
+        <div className="w-fit px-12">
+          <div className="flex flex-wrap justify-start gap-2">
+            {holidaysList}
+          </div>
+        </div>
+      )}
+      {showAddHolidayForm || editingHoliday ? (
+        <div className="mt-4">
+          <input
+            type="date"
+            value={editingHoliday ? editHolidayData.date : newHoliday.date}
+            onChange={(e) =>
+              editingHoliday
+                ? setEditHolidayData({
+                    ...editHolidayData,
+                    date: e.target.value,
+                  })
+                : setNewHoliday({ ...newHoliday, date: e.target.value })
+            }
+            className="p-2 border rounded mr-2"
+          />
+          <input
+            type="text"
+            placeholder="Reason"
+            value={
+              editingHoliday ? editHolidayData.reason : newHoliday.reason
+            }
+            onChange={(e) =>
+              editingHoliday
+                ? setEditHolidayData({
+                    ...editHolidayData,
+                    reason: e.target.value,
+                  })
+                : setNewHoliday({ ...newHoliday, reason: e.target.value })
+            }
+            className="p-2 border rounded mr-2"
+          />
+          <Button
+            onClick={editingHoliday ? updateHoliday : addHoliday}
+            className="hover:bg-green-800 bg-green-500 text-white px-4 py-2 rounded"
+          >
+            Save
+          </Button>
+          <Button
+            onClick={() => {
+              setEditingHoliday(null);
+              setShowAddHolidayForm(false);
+              setNewHoliday({ date: "", reason: "" });
+              setEditHolidayData({ date: "", reason: "" });
+            }}
+            className="bg-red-500 hover:bg-red-800 text-white px-4 py-2 rounded ml-2"
+          >
+            Cancel
+          </Button>
+        </div>
+      ) : (
+        <div className="flex justify-end mt-4">
+          <Button
+            onClick={() => setShowAddHolidayForm(true)}
+            className="bg-green-500 px-8 py-2 rounded-lg text-white hover:bg-green-800"
+          >
+            Add Holiday
+          </Button>
+        </div>
       )}
     </div>
+  </div>
+    
   );
 };
 
