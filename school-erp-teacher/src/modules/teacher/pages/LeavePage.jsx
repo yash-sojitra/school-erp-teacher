@@ -35,7 +35,7 @@ const LeavePage = () => {
     setSearchData(() =>
       leaves.filter((leave) => leave.reason.includes(search))
     );
-  }, [search]);
+  }, [search, leaves]);
 
   return (
     <div className="w-full mx-6 md:mr-0">
