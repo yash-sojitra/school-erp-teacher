@@ -7,28 +7,30 @@ import { Badge } from "@/components/ui/badge";
 import { CircleCheckBig, OctagonAlert } from "lucide-react";
 import axios from "axios";
 import Profile from "../components/classroom/Profile";
-
-//for datepicker
-import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns"
+import { Calendar as CalendarIcon } from "lucide-react"
+ 
+import { cn } from "@/lib/utils"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/ui/popover"
+
+import { Input } from "@/components/ui/input"
+
 
 const ClassRoom = () => {
   const { data } = useContext(AuthContext);
-
   const subjects = data.subject;
 
   const [present, setPresent] = useState([]);
   const [crrSubject, setCrrSubject] = useState(subjects[0]);
   const [crrStudents, setCrrStudents] = useState([]);
   const [pastAttendance, setPastAttendance] = useState([]);
+  const [search, setSearch] = useState('');
+  const [searchData, setSearchData] = useState([])
   const [date, setDate] = useState(new Date());
   const [err, setError] = useState(false);
 
@@ -84,6 +86,11 @@ const ClassRoom = () => {
     fetchStudents();
     fetchAttendance(date);
   }, [crrSubject]);
+
+
+  useEffect(()=>{
+    setSearchData(()=>crrStudents.filter((student)=>student.name.includes(search)))
+  },[search, crrStudents])
 
   async function handleSubmit() {
     try {
@@ -143,9 +150,11 @@ const ClassRoom = () => {
           );
         })}
       </div>
-      <table className="w-full my-6 bg-white text-center align-baseline table-fixed">
+      <Input className="mt-6 bg-white w-72" placeholder="search" onChange={(e)=>{setSearch(e.target.value)}}/>
+      <table className="w-full my-6 bg-white text-center align-baseline">
         <tr>
-          <th className="p-4">Name</th>
+          <th className="p-4">Enrollment No</th>
+          <th className="text-left pl-4">Name</th>
           <th>Attendance</th>
           <th>Profile</th>
         </tr>
@@ -155,8 +164,9 @@ const ClassRoom = () => {
             {err}
           </div>
         ) : (
-          crrStudents.map((student) => (
+          searchData.map((student) => (
             <tr key={student.id}>
+              <td className="font-bold text-xl">{student.rollNo}</td>
               <td className="flex gap-2 items-center py-4 pl-4">
                 <Avatar className="size-12">
                   <AvatarImage src="https://github.com/shadcn.png" />

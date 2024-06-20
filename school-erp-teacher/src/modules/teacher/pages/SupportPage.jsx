@@ -2,8 +2,7 @@ import { MessageCircleQuestion } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Textarea } from "@/components/ui/textarea"
-
+import { Textarea } from "@/components/ui/textarea";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,11 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
-  name: z
-    .string({ required_error: "name is required" })
-    .min(2, {
-      message: "min 2 characters required",
-    }),
+  name: z.string({ required_error: "name is required" }).min(2, {
+    message: "min 2 characters required",
+  }),
   contactNumber: z
     .string({ required_error: "phone number is required" })
     .length(10, { message: "Must be exactly 10 characters long" }),
@@ -33,14 +30,15 @@ const formSchema = z.object({
     .max(300, { message: "max 300 characters allowed" }),
 });
 
-function onSubmit(data) {
-    console.log(data);
-}
 const SupportPage = () => {
 
-    const form = useForm({
-        resolver: zodResolver(formSchema),
-      });
+  function onSubmit(data) {
+    console.log(data);
+  }
+
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+  });
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -64,19 +62,19 @@ const SupportPage = () => {
                 </FormItem>
               )}
             />
-              <FormField
-                control={form.control}
-                name="ParentEmail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>email</FormLabel>
-                    <FormControl>
-                      <Input type="email" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <FormField
+              control={form.control}
+              name="ParentEmail"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>email</FormLabel>
+                  <FormControl>
+                    <Input type="email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="contactNumber"
@@ -104,7 +102,6 @@ const SupportPage = () => {
               )}
             />
             <Button
-              type="submit"
               className="text-white w-full md:w-auto bg-primary-foreground hover:text-primary-foreground"
             >
               Submit

@@ -45,7 +45,7 @@ const formSchema = z.object({
 
 // const classes = [3, 5, 7, 8];
 
-const BookForm = () => {
+const BookForm = ({setRefresh}) => {
 
   const {data} = useContext(AuthContext);
 
@@ -87,6 +87,7 @@ const BookForm = () => {
       })     
       console.log(response.data);
       setOpen(false)
+      setRefresh(true);
     } catch (error) {
       console.error(error);
     }
