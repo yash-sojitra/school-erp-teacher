@@ -38,6 +38,7 @@ import { dateTimeFormatter } from "../utils/dateFormatter";
 const localizer = momentLocalizer(moment);
 
 const daysofWeek = [
+  "sunday",
   "monday",
   "tuesday",
   "wednesday",
@@ -53,6 +54,7 @@ const initTable = {
   thursday: [],
   friday: [],
   saturday: [],
+  sunday:[],
 };
 
 const TimeTable = () => {
@@ -87,6 +89,7 @@ const TimeTable = () => {
         })
       }
       else{
+        response.data.timeTable[0].sunday=[];
         setTimeTable(response.data.timeTable[0]);
       }
     } catch (e) {
@@ -101,7 +104,7 @@ const TimeTable = () => {
         `https://erp-system-backend.onrender.com/api/v1/department/fetch/${data.departmentId}`
       );
       console.log(response);
-      setSubjects(response.data.subject);
+      setSubjects(response.data.data.subjects);
     } catch (e) {
       setError("couldn't fetch time department data");
       console.log(e);
@@ -259,13 +262,27 @@ const TimeTable = () => {
     }
   }
 
+  async function dayTimeTable() {
+    let day = daysofWeek[date.getDay()];
+    console.log("hiiiiiii");
+    if (day == "sunday") {
+      console.log("holiday");
+    } else {
+      console.log("timetable",timeTable[daysofWeek[date.getDay()]]);
+      let todayTimeTable = [];
+      timeTable[daysofWeek[date.getDay()]].forEach((period) => {
+        todayTimeTable.push({
+          title: period.subjectName,
+          start: dateTimeFormatter(date, period.timeFrom),
+          end: dateTimeFormatter(date, period.timeTo),
+        });
+      });
+      setDayTable(todayTimeTable);
+    }
+  }
+
   useEffect(() => {
     setError(false);
-
-    
-
-
-
     fetchTimeTable();
     fetchDept();
     fetchAllTeachers();
@@ -320,6 +337,10 @@ const TimeTable = () => {
 			}),
 		[holidays]
 	);
+
+  useEffect(() => {
+    dayTimeTable();
+  }, [date, timeTable]);
 
   return (
     <div className="p-6 w-full">
@@ -390,6 +411,7 @@ const TimeTable = () => {
                         setTimeTable(timeTable);
                       }}
                     >
+                      {/* bug */}
                       {subjects.map((subject) => {
                         return (
                           <>
