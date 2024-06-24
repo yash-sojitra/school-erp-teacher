@@ -9,7 +9,6 @@ const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     console.log("Data changed");
     console.log(data);

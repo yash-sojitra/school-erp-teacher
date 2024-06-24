@@ -58,16 +58,22 @@ const initTable = {
 };
 
 const TimeTable = () => {
+
   const { data } = useContext(AuthContext);
   const [displayForm, setDisplayForm] = useState(false);
+
   const [timeTable, setTimeTable] = useState(initTable);
   const [subjects, setSubjects] = useState([]);
   const [teachers, setTeachers] = useState([]);
+
   const [activeDay, setActiveDay] = useState(daysofWeek[0]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
   const [dayTable, setDayTable] = useState([]);
   const [date, setDate] = useState(new Date());
+
   const [holidays, setHolidays] = useState({});
 	const [showAddHolidayForm, setShowAddHolidayForm] = useState(false);
 	const [newHoliday, setNewHoliday] = useState({ date: "", reason: "" });
@@ -232,8 +238,8 @@ const TimeTable = () => {
 
   function addPeriod() {
     const newPeriod = {
-      timeTo: "",
-      timeFrom: "",
+      timeTo: "10:00",
+      timeFrom: "11:00",
       subjectId: null,
       teacherId: null,
       subjectName: "",
@@ -288,6 +294,7 @@ const TimeTable = () => {
     fetchAllTeachers();
     fetchHolidays();
   }, [fetchHolidays]);
+
   const holidaysList = useMemo(
 		() =>
 			Object.keys(holidays).map((month) => {
@@ -441,9 +448,9 @@ const TimeTable = () => {
                       onChange={(e) => {
                         // console.log(e.target.value);
                         period.teacherId = parseInt(
-                          e.target.value.split(" ", 2)[0]
+                          e.target.value.substring(0, e.target.value.indexOf(' '))
                         );
-                        period.teacherName = e.target.value.split(" ", 2)[1];
+                        period.teacherName = e.target.value.substring(e.target.value.indexOf(' ') + 1);
                         console.log(timeTable);
                         setTimeTable(timeTable);
                       }}

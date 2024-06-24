@@ -55,6 +55,8 @@ export function daysBetween(dateString1, dateString2) {
 
 export function dateTimeFormatter(date, timeString) {
     let [hours, minutes] = timeString.split(':').map(Number);
+    console.log("date: ",date, "time: ",timeString);
+    console.log(hours, minutes);
     let newDate = new Date(date.setHours(hours, minutes));
     console.log(newDate);
     return newDate

@@ -7,19 +7,18 @@ import { Badge } from "@/components/ui/badge";
 import { CircleCheckBig, OctagonAlert } from "lucide-react";
 import axios from "axios";
 import Profile from "../components/classroom/Profile";
-import { format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
- 
-import { cn } from "@/lib/utils"
-import { Calendar } from "@/components/ui/calendar"
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
-import { Input } from "@/components/ui/input"
-
+import { Input } from "@/components/ui/input";
 
 const ClassRoom = () => {
   const { data } = useContext(AuthContext);
@@ -28,9 +27,8 @@ const ClassRoom = () => {
   const [present, setPresent] = useState([]);
   const [crrSubject, setCrrSubject] = useState(subjects[0]);
   const [crrStudents, setCrrStudents] = useState([]);
-  const [pastAttendance, setPastAttendance] = useState([]);
-  const [search, setSearch] = useState('');
-  const [searchData, setSearchData] = useState([])
+  const [search, setSearch] = useState("");
+  const [searchData, setSearchData] = useState([]);
   const [date, setDate] = useState(new Date());
   const [err, setError] = useState(false);
 
@@ -41,7 +39,10 @@ const ClassRoom = () => {
         `https://erp-system-backend.onrender.com/api/v1/student/${data.campusId}/fetchByDepartment/${crrSubject.department.id}`
       );
       if (response.data.data != undefined) setCrrStudents(response.data.data);
-      else setError("no student in department");
+      else {
+        setError("no student in department");
+        setPresent([]);
+      }
     } catch (err) {
       console.log(err);
       setError("error fetching data");
@@ -66,39 +67,75 @@ const ClassRoom = () => {
       if (response.data.success) {
         let tempArr = [];
         response.data.data.forEach((element) => {
-          if(element.status == "Present"){
+          if (element.status == "Present") {
             tempArr.push(element.studentId);
           }
         });
         // console.log(tempArr);
-        setPastAttendance(tempArr);
+        setPresent(tempArr);
         // console.log(pastAttendance);
       }
     } catch (error) {
-      if(error.response.status != 404){
+      if (error.response.status != 404) {
         console.log(error.response.status);
         setError(error.message);
       }
     }
   }
 
-  useEffect(() => {
-    fetchStudents();
-    fetchAttendance(date);
-  }, [crrSubject]);
-
-
-  useEffect(()=>{
-    setSearchData(()=>crrStudents.filter((student)=>student.name.includes(search)))
-  },[search, crrStudents])
-
-  async function handleSubmit() {
+  async function initPostRequest() {
     try {
-      const response = await axios.post(
+      const response = axios.post(
         "https://erp-system-backend.onrender.com/api/v1/attendance/mark",
         {
           subjectId: crrSubject.id,
+          selectedStudents: [],
+        }
+      );
+      console.log(response.data);
+
+    } catch (error) {
+      if (error.response.status != 409) {
+        console.log(error);
+        setError(error.message);
+      }
+    }
+  }
+
+  useEffect(() => {
+    setPresent([]);
+    initPostRequest();
+    fetchStudents();
+    fetchAttendance(date);
+    console.log("subject changed");
+  }, [crrSubject, date]);
+
+  useEffect(() => {
+    setSearchData(() =>
+      crrStudents.filter((student) => student.name.includes(search))
+    );
+  }, [search, crrStudents]);
+
+  async function handleSubmit() {
+
+    let dd = date.getDate();
+    let mm = date.getMonth() + 1;
+    const yy = date.getFullYear();
+
+    if (dd < 10) dd = "0" + dd;
+    if (mm < 10) mm = "0" + mm;
+
+    const datestring = dd + "-" + mm + "-" + yy;
+
+    console.log("put",datestring);
+
+    try {
+      const response = await axios.put(
+        "https://erp-system-backend.onrender.com/api/v1/attendance/update-attendance",
+        {
+          subjectId: crrSubject.id,
           selectedStudents: present,
+          date:datestring
         }
       );
       console.log(response.data);
@@ -150,7 +187,13 @@ const ClassRoom = () => {
           );
         })}
       </div>
-      <Input className="mt-6 bg-white w-72" placeholder="search" onChange={(e)=>{setSearch(e.target.value)}}/>
+      <Input
+        className="mt-6 bg-white w-72"
+        placeholder="search"
+        onChange={(e) => {
+          setSearch(e.target.value);
+        }}
+      />
       <table className="w-full my-6 bg-white text-center align-baseline">
         <tr>
           <th className="p-4">Enrollment No</th>
@@ -173,29 +216,22 @@ const ClassRoom = () => {
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <h1 className="text-xl font-medium">{student.name}</h1>
-                {(present.includes(student.id) ||
-                  pastAttendance.includes(student.id)) && (
+                {present.includes(student.id) && (
                   <CircleCheckBig className="size-5" color="#62ce3b" />
                 )}
               </td>
               <td>
-                {pastAttendance.includes(student.id) ? (
-                  <Button disabled>marked</Button>
-                ) : (
-                  <Button
-                    onClick={() => {
-                      if (present.includes(student.id)) {
-                        setPresent(present.filter((id) => id !== student.id));
-                      } else {
-                        setPresent([...present, student.id]);
-                      }
-                    }}
-                  >
-                    {present.includes(student.id)
-                      ? "Unmark"
-                      : "Mark Attendance"}
-                  </Button>
-                )}
+                <Button
+                  onClick={() => {
+                    if (present.includes(student.id)) {
+                      setPresent(present.filter((id) => id !== student.id));
+                    } else {
+                      setPresent([...present, student.id]);
+                    }
+                  }}
+                >
+                  {present.includes(student.id) ? "Unmark" : "Mark Attendance"}
+                </Button>
               </td>
               <td>
                 <Profile

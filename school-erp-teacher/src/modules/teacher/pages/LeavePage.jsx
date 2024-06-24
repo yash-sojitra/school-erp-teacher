@@ -18,8 +18,10 @@ const LeavePage = () => {
         const response = await axios.get(
           `https://erp-system-backend.onrender.com/api/v1/leave/fetch-leaves/${id}`
         );
-        setLeaves(response.data.data);
-        setSearchData(response.data.data);
+        if(response.data.data){
+          setLeaves(response.data.data);
+          setSearchData(response.data.data);
+        }
       } catch (err) {
         console.log(err);
       }
