@@ -1,5 +1,5 @@
-import { createContext, useReducer, useEffect } from "react";
-import { jwtDecode } from "jwt-decode";
+import { createContext, useReducer, useEffect, useState } from "react";
+import {jwtDecode} from "jwt-decode";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -7,7 +7,7 @@ const AuthContext = createContext();
 
 const authReducer = (state, action) => {
   switch (action.type) {
-    case "login":
+    case "LOGIN":
       return {
         id: action.payload.id,
         data: action.payload.data,
@@ -25,72 +25,67 @@ const authReducer = (state, action) => {
 };
 
 const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(authReducer,
-    {
-      id: null,
-      data:null,
-      isAuthenticated: false,
-    });
+  const [state, dispatch] = useReducer(authReducer, {
+    id: null,
+    data: null,
+    isAuthenticated: false,
+  });
+  const [loading, setLoading] = useState(true);
 
-  //on re render checks for token
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     async function fetchData(id) {
-      const response = await axios.get(`https://erp-system-backend.onrender.com/api/v1/teacher/6/fetch/${id}`)
+      const response = await axios.get(`https://erp-system-backend.onrender.com/api/v1/teacher/6/fetch/${id}`);
       return response.data.data;
     }
 
     if (token) {
       try {
         const data = jwtDecode(token);
-        console.log("Decoded token data:", data);
         if (data.id) {
           fetchData(data.id).then((studentData) => {
-            console.log(studentData);
-            dispatch({ type: "login", payload: { id: data.id, data: studentData } });
-            console.log("final state is", state);
-            console.log("Dispatched LOGIN action with payload:", data.id, studentData);
+            dispatch({ type: "LOGIN", payload: { id: data.id, data: studentData } });
+            setLoading(false);
+          }).catch(error => {
+            console.error("Error fetching data:", error);
+            setLoading(false);
           });
+        } else {
+          setLoading(false);
         }
-      }
-      catch (error) {
+      } catch (error) {
         console.error("Error decoding token:", error);
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
   }, []);
 
   const login = async (credentials) => {
-    // Implement login logic (e.g., API call)
-
-    //axios implementation
     const response = await axios.post(
       `https://erp-system-backend.onrender.com/api/v1/teacher/login`,
       credentials
     );
     const responseData = response.data;
-    console.log(responseData);
-
     if (responseData.token) {
       localStorage.setItem("token", responseData.token);
       const { id } = jwtDecode(responseData.token);
-
-      const response = await axios.get(`https://erp-system-backend.onrender.com/api/v1/teacher/${responseData.teacherData.campusId}/fetch/${responseData.teacherData.id}`)
-      console.log(response.data.data);
-      const studentData = response.data.data;
-
-      dispatch({ type: "login", payload: { id: id, data: studentData } });
+      const studentData = await axios.get(`https://erp-system-backend.onrender.com/api/v1/teacher/${responseData.teacherData.campusId}/fetch/${responseData.teacherData.id}`).then(res => res.data.data);
+      dispatch({ type: "LOGIN", payload: { id: id, data: studentData } });
     }
-
     return { message: responseData.message, success: responseData.success };
   };
 
   const logout = () => {
     localStorage.removeItem("token");
-    console.log("dispatched logout");
     dispatch({ type: "LOGOUT" });
-    console.log(state);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <AuthContext.Provider

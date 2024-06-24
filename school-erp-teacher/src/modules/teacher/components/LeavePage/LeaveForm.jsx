@@ -36,6 +36,8 @@ import { useContext, useState } from "react";
 import { AuthContext } from "@/auth/context/AuthContext";
 import axios from "axios";
 import { dateString, daysBetween } from "../../utils/dateFormatter";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const formSchema = z.object({
   date: z.object({
@@ -77,6 +79,16 @@ const LeaveForm = ({leaves, setLeaves}) => {
         body
       );
       console.log(response.data.success);
+      console.log(response.data);
+      toast.success(response.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       setOpen(false)
       setLeaves(()=>[...leaves, body])
     } catch (err) {
@@ -173,6 +185,7 @@ const LeaveForm = ({leaves, setLeaves}) => {
           </Form>
         </DialogContent>
       </Dialog>
+      <ToastContainer />
     </div>
   );
 };

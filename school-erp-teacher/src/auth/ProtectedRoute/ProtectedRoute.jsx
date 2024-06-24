@@ -3,27 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
-
-  const { data , isAuthenticated } = useContext(AuthContext);
-  // const { isAuthenticated } = true;
+  const { data, isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("Data changed");
-    console.log(data);
-    if (data === null) {
+    if (!isAuthenticated) {
       navigate("/login", { replace: true });
-    }
-    else {
-      if(children.type.name == "TimeTable" && data.AdditionalRole != "class teacher"){
-        navigate("/")
-      }
-      else {
+    } else {
+      if (children.type.name === "TimeTable" && data.AdditionalRole !== "class teacher") {
+        navigate("/");
+      } else {
         setLoading(false);
       }
     }
-  }, [isAuthenticated, navigate, data]);
+  }, [isAuthenticated, navigate, data, children]);
 
   if (loading) {
     return <div>Loading...</div>;

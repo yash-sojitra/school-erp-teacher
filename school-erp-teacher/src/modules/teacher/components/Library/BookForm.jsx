@@ -25,6 +25,9 @@ import { Label } from "@/components/ui/label";
 import axios from "axios";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/auth/context/AuthContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 // import { useContext } from "react";
 // import { AuthContext } from "@/auth/context/AuthContext";
 // import axios from "axios";
@@ -86,6 +89,15 @@ const BookForm = ({setRefresh}) => {
         subject:formData.subject
       })     
       console.log(response.data);
+      toast.success(response.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       setOpen(false)
       setRefresh(true);
     } catch (error) {
@@ -164,6 +176,7 @@ const BookForm = ({setRefresh}) => {
           </form>
         </DialogContent>
       </Dialog>
+      <ToastContainer />
     </div>
   );
 };

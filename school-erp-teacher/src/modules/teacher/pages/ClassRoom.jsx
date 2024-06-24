@@ -9,7 +9,8 @@ import axios from "axios";
 import Profile from "../components/classroom/Profile";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -139,6 +140,15 @@ const ClassRoom = () => {
         }
       );
       console.log(response.data);
+      toast.success(response.data.message, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -249,6 +259,7 @@ const ClassRoom = () => {
       ) : (
         <Button onClick={handleSubmit}>Submit</Button>
       )}
+      <ToastContainer />
     </div>
   );
 };
