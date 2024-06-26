@@ -130,6 +130,7 @@ const TimeTable = () => {
       console.log(e);
     }
   }
+  
   const fetchHolidays = useCallback(async () => {
 		try {
 			const response = await axios.get(

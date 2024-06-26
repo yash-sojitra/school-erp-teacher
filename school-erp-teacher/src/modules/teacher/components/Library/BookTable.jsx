@@ -27,8 +27,11 @@ const BookTable = ({ refresh, setRefresh }) => {
         const response = await axios.get(
           `https://erp-system-backend.onrender.com/api/v1/library/fetch-books-byTeacher/${data.id}`
         );
-        setBooks(response.data.data || []);
-        setSearchData(response.data.data || []);
+        // console.log(response.data);
+        if (response.data.success) {
+          setBooks(response.data.data);
+          setSearchData(response.data.data);
+        }
       } catch (error) {
         setError(true);
         console.error(error);
