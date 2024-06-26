@@ -1,5 +1,5 @@
 import { AuthContext } from "@/auth/context/AuthContext";
-import { BadgeIndianRupee, CalendarClock, GraduationCap, Info, LayoutDashboard, Library, LibraryBig, LogOut, MessageCircleMore, Settings, Stamp } from "lucide-react";
+import { BadgeIndianRupee, CalendarClock,FileDigit, GraduationCap, Info, LayoutDashboard, Library, LibraryBig, LogOut, MessageCircleMore, Settings, Stamp } from "lucide-react";
 import { useContext } from "react";
 import { Outlet, Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -27,6 +27,7 @@ const Sidebar = ({ sidebar, boxRef }) => {
         <ul className="text-lg font-semibold">
           <li><Link to='/' className="flex gap-4 my-6 items-center"><LayoutDashboard /> Dashboard</Link></li>
           <li><Link to='/class' className="flex gap-4 my-6 items-center"><GraduationCap />Class Room</Link></li>
+          <li><Link to='/marks' className="flex gap-4 my-6 items-center"><FileDigit />Provide Marks</Link></li>
           <li><Link to='/leave' className="flex gap-4 my-6 items-center"><Stamp /> Leave</Link></li>
           <li><Link to='/library' className="flex gap-4 my-6 items-center"><Library /> Library</Link></li>
           {data.AdditionalRole === "class teacher" &&

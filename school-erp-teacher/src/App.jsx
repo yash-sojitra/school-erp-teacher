@@ -13,6 +13,7 @@ import LeavePage from "./modules/teacher/pages/LeavePage";
 import Library from "./modules/teacher/pages/Library";
 import TimeTable from "./modules/teacher/pages/TimeTable";
 import SupportPage from "./modules/teacher/pages/SupportPage";
+import Marks from "./modules/teacher/pages/ProvideMarks";
 // import Sidebar from "./components/Sidebar";
 // import OutsideClick from "./hooks/outsideClick";
 
@@ -79,6 +80,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <SupportPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/marks",
+        element: (
+          <ProtectedRoute>
+            <Marks />
           </ProtectedRoute>
         ),
       },
